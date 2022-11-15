@@ -1,22 +1,32 @@
 <?php
 namespace Tgu\Ryabova\Blog;
 
-use Tgu\Ryabova\Person\Person;
-
 class Post
 {
-public function __construct(
-    private Person $person,
-    private string $text,
-    private int $idPost,
-    private Name $idUser,
-    private string $title,
+    public function __construct(
+        private UUID $id,
+        private string $id_author,
+        private string $header,
+        private string $text,
+    )
+    {
+    }
 
-)
-{
-}
-public function __toString(): string
-{
-    return $this->id . ' ' .$this->idAuth . ' ' .$this->title . ' ' . $this->text;
-}
+    public function __toString(): string
+    {
+        $id=$this->getUuidPost();
+        return "Post $id author $this->id_author with title $this->header and text - $this->text".PHP_EOL;
+    }
+    public function getUuidPost():UUID{
+        return $this->id;
+    }
+    public function getUuidUser():string{
+        return $this->id_author;
+    }
+    public function getTitle():string{
+        return $this->header;
+    }
+    public function getTextPost():string{
+        return $this->text;
+    }
 }

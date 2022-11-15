@@ -4,7 +4,6 @@ namespace Tgu\Ryabova\Person;
 
 class Name{
 public function __construct(
-    private int $idUser,
     private string $firstName,
     private string $lastName,
 
@@ -12,8 +11,14 @@ public function __construct(
 {
 
 }
-public function __toString(): string
-{
-    return $this->idUser . ' ' .$this->firstName . ' ' . $this->lastName;
-}
+    public function __toString(): string
+    {
+        return $this->firstName . ' - имя, ' . $this->lastName . ' - фамилия';
+    }
+    public function getFirstName():string{
+        return $this->firstName;
+    }
+    public function getLastName():string{
+        return $this->lastName;
+    }
 }
