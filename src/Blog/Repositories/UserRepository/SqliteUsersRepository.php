@@ -20,12 +20,15 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         $statement = $this->connection->prepare(
             "INSERT INTO users (uuid, first_name, last_name, username) VALUES (:uuid,    :first_name,:last_name, :username)");
         $statement->execute([
-            ':uuid'=>(string)$user->getUuid(),
+            ':uuid'=>(string)$user->getByUuid(),
             ':first_name'=>$user->getName()->getFirstName(),
             ':last_name'=>$user->getName()->getLastName(),
             ':username'=>$user->getUserName()]);
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     private function getUser(PDOStatement $statement, string $value):User{
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if($result===false){
@@ -34,6 +37,9 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         return new User(new UUID($result['uuid']), new Name($result['first_name'], $result['last_name']), $result['username']);
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function getByUsername(string $username):User
     {
         $statement = $this->connection->prepare("SELECT * FROM users WHERE username = :username");
@@ -41,11 +47,12 @@ class SqliteUsersRepository implements UsersRepositoryInterface
         return $this->getUser($statement, $username);
     }
 
-    public function getByUuid(UUID $uuid): User
+    /**
+     * @throws UserNotFoundException
+     */
+    public function getByUuid(UUID  $uuid): User
     {
-        $statement = $this->connection->prepare(
-            "SELECT * FROM users WHERE uuid = :uuid"
-        );
+        $statement = $this->connection->prepare("SELECT * FROM users WHERE uuid = :uuid");
         $statement->execute([':uuid'=>(string)$uuid]);
         return $this->getUser($statement, (string)$uuid);
     }

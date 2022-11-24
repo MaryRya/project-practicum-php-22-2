@@ -20,7 +20,7 @@ class User
         $lastName = $this->name->getLastName();
         return "User $uuid with name $firstName $lastName and login $this->username".PHP_EOL;
     }
-    public function getUuid():UUID{
+    public function getByUuid():UUID{
         return $this->uuid;
     }
     public function getName():Name{
@@ -29,4 +29,6 @@ class User
     public function getUserName():string{
         return $this->username;
     }
+
+
 }

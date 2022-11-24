@@ -8,7 +8,7 @@ use Tgu\Ryabova\Blog\Post;
 use Tgu\Ryabova\Blog\UUID;
 use Tgu\Ryabova\Exceptions\PostNotFoundException;
 
-class SqlitePostsRepository
+class SqlitePostsRepository implements PostsRepositoryInterface
 {
     public function __construct(private PDO $connection)
     {
@@ -25,6 +25,9 @@ class SqlitePostsRepository
             ':text'=>$post->getTextPost()]);
     }
 
+    /**
+     * @throws PostNotFoundException
+     */
     private function getPost(PDOStatement $statement, string $value):Post{
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if($result===false){
@@ -33,6 +36,9 @@ class SqlitePostsRepository
         return new Post(new UUID($result['uuid_post']), $result['uuid_author'], $result['title'], $result['text']);
     }
 
+    /**
+     * @throws PostNotFoundException
+     */
     public function getByUuidPost(UUID $uuidPost): Post
     {
         $statement = $this->connection->prepare(
@@ -40,5 +46,15 @@ class SqlitePostsRepository
         );
         $statement->execute([':uuid_post'=>(string)$uuidPost]);
         return $this->getPost($statement, (string)$uuidPost);
+    }
+
+    /**
+     * @throws PostNotFoundException
+     */
+    public function getTextPost(string $text):Post
+    {
+        $statement = $this->connection->prepare("SELECT * FROM post WHERE text = :text");
+        $statement->execute([':text'=>(string)$text]);
+        return $this->getPost($statement, $text);
     }
 }
