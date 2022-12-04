@@ -2,6 +2,8 @@
 
 use Tgu\Ryabova\Blog\Http\Actions\Comments\CreateComment;
 use Tgu\Ryabova\Blog\Http\Actions\Posts\DeletePost;
+use Tgu\Ryabova\Blog\Http\Actions\Users\CreateUser;
+use Tgu\Ryabova\Blog\Http\Actions\Users\FindByUsername;
 use Tgu\Ryabova\Blog\Http\ErrorResponse;
 use Tgu\Ryabova\Blog\Http\Request;
 use Tgu\Ryabova\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
@@ -9,6 +11,7 @@ use Tgu\Ryabova\Exceptions\HttpException;
 
 
 require_once __DIR__ .'/vendor/autoload.php';
+$conteiner = require __DIR__ .'/bootstrap.php';
 $request = new Request($_GET,$_SERVER,file_get_contents('php://input'));
 
 try{
@@ -25,23 +28,21 @@ catch (HttpException $exception){
     (new ErrorResponse($exception->getMessage()))->send();
     return;
 }
-
 $routes =[
-    'POST'=>[
-        '/posts/comment'=>new CreateComment(
-            new SqliteCommentsRepository(
-                new PDO('sqlite:'.__DIR__.'/blog.sqlite')
-            )
-        )
+    'GET'=>['/users/show'=>FindByUsername::class,
     ],
-    'DELETE'=>['/post/delete'=>new DeletePost(new SqlitePostRepository(new PDO('sqlite:'.__DIR__.'/blog.sqlite')))],
+    'POST'=>[
+        '/users/create'=>CreateUser::class,
+    ],
 ];
+
 
 if (!array_key_exists($path,$routes[$method])){
     (new ErrorResponse('Not found'))->send();
     return;
 }
-$action = $routes[$method][$path];
+$actionClassName = $routes[$method][$path];
+$action = $conteiner->get($actionClassName);
 try {
     $response = $action->handle($request);
     $response->send();
