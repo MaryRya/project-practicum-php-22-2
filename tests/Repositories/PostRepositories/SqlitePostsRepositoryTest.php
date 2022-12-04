@@ -9,6 +9,7 @@ use Tgu\Ryabova\Blog\Post;
 use Tgu\Ryabova\Blog\Repositories\PostRepositories\SqlitePostsRepository;
 use Tgu\Ryabova\Blog\UUID;
 use Tgu\Ryabova\Exceptions\PostNotFoundException;
+use Tgu\Ryabova\PhpUnit\Blog\DummyLogger;
 
 class SqlitePostsRepositoryTest extends TestCase
 {
@@ -20,7 +21,7 @@ class SqlitePostsRepositoryTest extends TestCase
         $statementStub->method('fetch')->willReturn(false);
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqlitePostsRepository($connectionStub);
+        $repository = new SqlitePostsRepository($connectionStub, new DummyLogger());
 
         $this->expectException(PostNotFoundException::class);
         $this->expectExceptionMessage('Cannot get post: vaaaay');
@@ -43,7 +44,8 @@ class SqlitePostsRepositoryTest extends TestCase
                 ':text'=>'vaaaay']);
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqlitePostsRepository($connectionStub);
+        $repository = new SqlitePostsRepository($connectionStub,
+            new DummyLogger());
 
         $repository->savePost(new Post(
             new UUID('5b78178a-eda3-4e85-9a62-90f5a0320c4e'), 'f76cfc25-f8b2-4d15-9775-944db6648a82','Title1','vaaaay'
@@ -58,7 +60,7 @@ class SqlitePostsRepositoryTest extends TestCase
         $statementStub->method('fetch')->willReturn(false);
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqlitePostsRepository($connectionStub);
+        $repository = new SqlitePostsRepository($connectionStub, new DummyLogger());
 
         $this->expectException(PostNotFoundException::class);
 

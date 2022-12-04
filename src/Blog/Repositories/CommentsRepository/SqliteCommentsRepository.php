@@ -4,18 +4,21 @@ namespace Tgu\Ryabova\Blog\Repositories\CommentsRepository;
 
 use PDO;
 use PDOStatement;
+use Psr\Log\LoggerInterface;
 use Tgu\Ryabova\Blog\Comments;
 use Tgu\Ryabova\Blog\UUID;
 use Tgu\Ryabova\Exceptions\CommentNotFoundException;
 
 class SqliteCommentsRepository implements CommentsRepositoryInterface
 {
-    public function __construct(private PDO $connection)
+    public function __construct(private PDO $connection,
+                                private LoggerInterface $logger,)
     {
 
     }
 
     public function saveComment(Comments $comment):void{
+        $this->logger->info('Save comment ');
         $statement = $this->connection->prepare(
             "INSERT INTO comments (uuid_comment, uuid_post, uuid_author, textCom) VALUES (:uuid_comment,:uuid_post,:uuid_author, :textCom)");
         $statement->execute([
@@ -23,22 +26,20 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
             ':uuid_post'=>$comment->getUuidPost(),
             ':uuid_author'=>$comment->getUuidUser(),
             ':textCom'=>$comment->getTextComment()]);
+        $this->logger->info("'Save comment: $comment" );
     }
 
-    /**
-     * @throws CommentNotFoundException
-     */
+
     private function getComment(PDOStatement $statement, string $value):Comments{
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         if($result===false){
             throw new CommentNotFoundException("Cannot get comment: $value");
+            $this->logger->warning("Cannot get comment: $value");
         }
         return new Comments(new UUID($result['uuid_comment']), $result['uuid_post'], $result['uuid_author'], $result['textCom']);
     }
 
-    /**
-     * @throws CommentNotFoundException
-     */
+
     public function getByUuidComment(UUID $uuid_comment): Comments
     {
         $statement = $this->connection->prepare(
@@ -47,9 +48,7 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
         return $this->getComment($statement, (string)$uuid_comment);
     }
 
-    /**
-     * @throws CommentNotFoundException
-     */
+
     public function getTextComment(string $textCom):Comments
     {
         $statement = $this->connection->prepare("SELECT * FROM comments WHERE textCom = :textCom");

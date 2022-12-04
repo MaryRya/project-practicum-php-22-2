@@ -10,6 +10,7 @@ use Tgu\Ryabova\Blog\Comments;
 use Tgu\Ryabova\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use Tgu\Ryabova\Blog\UUID;
 use Tgu\Ryabova\Exceptions\CommentNotFoundException;
+use Tgu\Ryabova\PhpUnit\Blog\DummyLogger;
 
 class SqliteCommentsRepositoryTest extends TestCase
 {
@@ -21,7 +22,7 @@ class SqliteCommentsRepositoryTest extends TestCase
         $statementStub->method('fetch')->willReturn(false);
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqliteCommentsRepository($connectionStub);
+        $repository = new SqliteCommentsRepository($connectionStub, new DummyLogger());
 
         $this->expectException(CommentNotFoundException::class);
         $this->expectExceptionMessage('Cannot get comment: Qooooo');
@@ -43,9 +44,11 @@ class SqliteCommentsRepositoryTest extends TestCase
                 ':uuid_author'=>'f76cfc25-f8b2-4d15-9775-944db6648a82',
                 ':textCom'=>'Qooooo'
             ]);
+
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqliteCommentsRepository($connectionStub);
+        $repository = new SqliteCommentsRepository($connectionStub,
+            new DummyLogger());
 
         $repository->saveComment( new Comments(
             new UUID('f165d492-bffe-448f-a499-b72d16a40f1b'), 'edb10650-3b52-4a8e-b05c-c5a1f167bed0','f76cfc25-f8b2-4d15-9775-944db6648a82','Qooooo'
@@ -60,7 +63,7 @@ class SqliteCommentsRepositoryTest extends TestCase
 
         $connectionStub->method('prepare')->willReturn($statementStub);
 
-        $repository = new SqliteCommentsRepository($connectionStub);
+        $repository = new SqliteCommentsRepository($connectionStub, new DummyLogger());
 
         $this->expectException(CommentNotFoundException::class);
         $this->expectExceptionMessage('Cannot get comment:f165d492-bffe-448f-a499-b72d16a40f1b');
