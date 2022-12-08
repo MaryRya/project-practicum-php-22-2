@@ -1,11 +1,11 @@
 <?php
 namespace Tgu\Ryabova\Blog;
 
-class Post
+class Post extends \Tgu\Ryabova\Blog\User
 {
     public function __construct(
         private UUID $id,
-        private string $id_author,
+        private User $id_author,
         private string $header,
         private string $text,
     )
@@ -15,7 +15,8 @@ class Post
     public function __toString(): string
     {
         $id=$this->getUuidPost();
-        return "Post $id author $this->id_author with title $this->header and text - $this->text".PHP_EOL;
+       // return "Post $id author $this->id_author with title $this->header and text - $this->text".PHP_EOL;
+        return $this->id_author->getUserName() . 'пишет: ' . PHP_EOL . $this->header . PHP_EOL . $this->text;
     }
     public function getUuidPost():UUID{
         return $this->id;

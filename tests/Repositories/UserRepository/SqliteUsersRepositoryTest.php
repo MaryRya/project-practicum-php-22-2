@@ -43,7 +43,8 @@ class SqliteUsersRepositoryTest extends TestCase
                 ':first_name'=>'Petya',
                 ':last_name'=>'Petrow',
                 ':uuid' =>'cd6a4d34-3d65-44a5-bb52-90a0ce3efcb3',
-                ':username'=>'admin'
+                ':username'=>'admin',
+                ':password'=>'1234'
             ]);
           $connectionStub->method('prepare')->willReturn($statementStub);
 
@@ -51,7 +52,7 @@ class SqliteUsersRepositoryTest extends TestCase
 
         $repository->save(new User(
             new UUID('cd6a4d34-3d65-44a5-bb52-90a0ce3efcb3'),
-            new Name('Petya', 'Petrow'), 'admin'
+            new Name('Petya', 'Petrow'), 'admin', '1234'
         ));
     }
 

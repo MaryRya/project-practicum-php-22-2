@@ -40,6 +40,9 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
     }
 
 
+    /**
+     * @throws CommentNotFoundException
+     */
     public function getByUuidComment(UUID $uuid_comment): Comments
     {
         $statement = $this->connection->prepare(
@@ -49,6 +52,9 @@ class SqliteCommentsRepository implements CommentsRepositoryInterface
     }
 
 
+    /**
+     * @throws CommentNotFoundException
+     */
     public function getTextComment(string $textCom):Comments
     {
         $statement = $this->connection->prepare("SELECT * FROM comments WHERE textCom = :textCom");

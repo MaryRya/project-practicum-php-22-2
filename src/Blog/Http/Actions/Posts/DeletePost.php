@@ -3,6 +3,7 @@
 namespace Tgu\Ryabova\Blog\Http\Actions\Posts;
 
 use Tgu\Ryabova\Blog\Http\Actions\ActionInterface;
+use Tgu\Ryabova\Blog\Http\Auth\AuthenticationInterface;
 use Tgu\Ryabova\Blog\Http\ErrorResponse;
 use Tgu\Ryabova\Blog\Http\Request;
 use Tgu\Ryabova\Blog\Http\Response;

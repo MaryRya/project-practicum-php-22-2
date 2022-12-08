@@ -2,13 +2,14 @@
 
 use Dotenv\Dotenv;
 use Psr\Log\LoggerInterface;
+use Tgu\Ryabova\Blog\Http\Actions\Auth\Login;
 use Tgu\Ryabova\Blog\Http\Actions\Comments\CreateComment;
-use Tgu\Ryabova\Blog\Http\Actions\Posts\DeletePost;
+use Tgu\Ryabova\Blog\Http\Actions\Likes\CreateLikes;
+use Tgu\Ryabova\Blog\Http\Actions\Posts\CreatePost;
 use Tgu\Ryabova\Blog\Http\Actions\Users\CreateUser;
 use Tgu\Ryabova\Blog\Http\Actions\Users\FindByUsername;
 use Tgu\Ryabova\Blog\Http\ErrorResponse;
 use Tgu\Ryabova\Blog\Http\Request;
-use Tgu\Ryabova\Blog\Repositories\CommentsRepository\SqliteCommentsRepository;
 use Tgu\Ryabova\Exceptions\HttpException;
 
 
@@ -41,7 +42,11 @@ $routes =[
     'GET'=>['/users/show'=>FindByUsername::class,
     ],
     'POST'=>[
+        '/login'=> Login::class,
         '/users/create'=>CreateUser::class,
+        '/posts/create'=> CreatePost::class,
+        '/comment/create'=> CreateComment::class,
+        '/like/create'=> CreateLikes::class,
     ],
 ];
 

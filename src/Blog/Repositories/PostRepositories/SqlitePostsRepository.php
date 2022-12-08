@@ -62,4 +62,6 @@ class SqlitePostsRepository implements PostsRepositoryInterface
         $statement->execute([':text'=>(string)$text]);
         return $this->getPost($statement, $text);
     }
+
+
 }
