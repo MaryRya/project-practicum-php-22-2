@@ -1,0 +1,35 @@
+{
+    "name": "tgu/ryabova",
+    "autoload": {
+        "psr-4": {
+            "Tgu\\Ryabova\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tgu\\Ryabova\\PhpUnit\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MaryRya",
+            "email": "stud0000200953@study.utmn.ru"
+        }
+    ],
+    "require": {
+        "symfony/polyfill-uuid": "^1.26",
+
+        "ext-pdo": "*",
+        "monolog/monolog": "^3.2",
+        "vlucas/phpdotenv": "^5.5"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "fakerphp/faker": "^1.20",
+        "roave/security-advisories": "dev-latest"
+    },
+    "scripts": {
+"test": "phpunit tests --testdox --colors"
+    }
+}
